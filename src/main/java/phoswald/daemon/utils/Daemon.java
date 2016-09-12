@@ -31,7 +31,7 @@ public class Daemon {
 	}
 	
 	/**
-	 * Called by JVM upon SIGTERM, must block until main() returns.
+	 * Called by the JVM upon SIGTERM, must block until main() returns.
 	 */
 	private synchronized void stopAndWait(ThrowingRunnable stop, ThrowingRunnable done) {
     	try {
