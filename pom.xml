@@ -5,11 +5,11 @@
     <groupId>com.github.phoswald</groupId>
     <artifactId>sonatype-pom</artifactId>
     <version>1.0.0</version>
-    <relativePath/>
+    <relativePath />
   </parent>
 
   <artifactId>daemon-utils</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>Daemon Utils</name>
@@ -46,7 +46,7 @@
     <connection>scm:git:https://github.com/phoswald/daemon-utils.git</connection>
     <developerConnection>scm:git:https://github.com/phoswald/daemon-utils.git</developerConnection>
     <url>https://github.com/phoswald/daemon-utils/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>daemon-utils-1.0.1</tag>
   </scm>
 
 </project>
