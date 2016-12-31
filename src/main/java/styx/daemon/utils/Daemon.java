@@ -1,7 +1,7 @@
-package phoswald.daemon.utils;
+package styx.daemon.utils;
 
 /**
- * A helper class for implementing long running applications that terminate <b>cleanly</b> upon SIGTERM.
+ * Utility for implementing long running applications that terminate <b>cleanly</b> upon SIGTERM.
  */
 public class Daemon {
 
@@ -22,7 +22,7 @@ public class Daemon {
         Daemon inst = new Daemon();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> inst.stopAndWait(stop, done)));
         try {
-            run.invoke();
+            run.run();
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -36,13 +36,13 @@ public class Daemon {
     private synchronized void stopAndWait(ThrowingRunnable stop, ThrowingRunnable done) {
         try {
             if(!stopped) {
-                stop.invoke();
+                stop.run();
             }
             while(!stopped) {
                 wait(1000);
             }
             if(done != null) {
-                done.invoke();
+                done.run();
             }
         } catch (Exception e) {
             e.printStackTrace();
