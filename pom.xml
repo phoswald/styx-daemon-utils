@@ -13,7 +13,7 @@
   <packaging>jar</packaging>
 
   <name>Styx Daemon Utils</name>
-  <description>Utilities for implementing long running applications that terminate cleanly upon SIGTERM</description>
+  <description>Utilities for implementing container-friendly background processes</description>
   <url>https://github.com/phoswald/styx-daemon-utils</url>
 
   <properties>
