@@ -1,5 +1,7 @@
 package styx.daemon.utils;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Utility for implementing long running applications that terminate <b>cleanly</b> upon SIGTERM.
  */
@@ -10,13 +12,56 @@ public class Daemon {
     /**
      * To be called from the application's main() method.
      * <p>
-     * The call to this method must the single or the last statement in application's main() method.
-     * Statements after the call to this method are not guaranteed to be executed as the JVM exists
-     * after the shutdown hook returns.
+     * The call to this method must the last statement in application's main() method.
+     * Statements after the call to this method are not guaranteed to be executed as the JVM exits
+     * after the internally used shutdown hook returns.
      *
-     * @param run the runnable that runs the application, must not be null.
-     * @param stop the runnable that is to be called upon SIGTERM, must not be null.
-     * @param done the runnable that is to be called when everything is done, can be null.
+     * @param run the function that runs the application, must not be null and must return when the passed latch is decremented.
+     */
+    public static void main(ThrowingConsumer<CountDownLatch> run) {
+        CountDownLatch stop = new CountDownLatch(1);
+        main(() -> run.accept(stop), stop::countDown, null);
+    }
+
+    /**
+     * To be called from the application's main() method.
+     * <p>
+     * The call to this method must the last statement in application's main() method.
+     * Statements after the call to this method are not guaranteed to be executed as the JVM exits
+     * after the internally used shutdown hook returns.
+     *
+     * @param arg argument to be passed to the function.
+     * @param run the function that runs the application, must not be null and must return when the passed latch is decremented.
+     */
+    public static <T> void main(T arg, ThrowingBiConsumer<T, CountDownLatch> run) {
+        CountDownLatch stop = new CountDownLatch(1);
+        main(() -> run.accept(arg, stop), stop::countDown, null);
+    }
+
+    /**
+     * To be called from the application's main() method.
+     * <p>
+     * The call to this method must the last statement in application's main() method.
+     * Statements after the call to this method are not guaranteed to be executed as the JVM exits
+     * after the internally used shutdown hook returns.
+     *
+     * @param run the function that runs the application, must not be null and must return when stop is called.
+     * @param stop the function that is to be called upon SIGTERM, must not be null.
+     */
+    public static void main(ThrowingRunnable run, ThrowingRunnable stop) {
+        main(run, stop, null);
+    }
+
+    /**
+     * To be called from the application's main() method.
+     * <p>
+     * The call to this method must the last statement in application's main() method.
+     * Statements after the call to this method are not guaranteed to be executed as the JVM exits
+     * after the internally used shutdown hook returns.
+     *
+     * @param run the function that runs the application, must not be null and must return when stop is called.
+     * @param stop the function that is to be called upon SIGTERM, must not be null.
+     * @param done the function that is to be called when everything is done, can be null.
      */
     public static void main(ThrowingRunnable run, ThrowingRunnable stop, ThrowingRunnable done) {
         Daemon inst = new Daemon();
